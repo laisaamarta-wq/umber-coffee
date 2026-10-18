@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en" data-checks="hide">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>UMBER · Specialty coffee, Riga</title>
+  <meta name="description" content="UMBER is a specialty coffee bar in Riga. Turn the wheel to a tasting note, from citrus to cocoa, and choose the coffee that has it.">
+  <meta name="theme-color" content="#120d0a">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="UMBER · Specialty coffee">
+  <meta property="og:description" content="Choose your coffee by tasting note, from citrus to cocoa.">
+  <meta property="og:image" content="assets/img/og-image.jpg"><!-- after publishing: make this the full address, https://…/assets/img/og-image.jpg -->
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="preload" as="image" href="assets/img/exterior-1280.jpg" imagesrcset="assets/img/exterior-1280.jpg 1280w, assets/img/exterior-2400.jpg 2400w" imagesizes="(max-width: 899px) 230vw, 100vw">
+  <link rel="stylesheet" href="styles.css">
+  <!-- STORY-CSS --><link rel="stylesheet" href="lab/story-film.css"><!-- /STORY-CSS -->
+  <link rel="stylesheet" href="shop.css">
+</head>
+<body>
+  <a class="skip" href="#knob">Skip to the tasting wheel</a>
+
+  <!-- Fixed top bar -->
+  <header class="bar" id="bar">
+    <a class="brand" href="#top" aria-label="UMBER specialty coffee, back to top">
+      <span class="brand-mark">UMBER</span>
+      <span class="brand-sub">Specialty coffee<span class="brand-city"> · Riga</span></span>
+    </a>
+    <div class="bar-actions">
+      <button class="bar-btn story-btn" id="storyBtn" type="button" aria-label="Watch our story: a 25-second film of our coffee's way from the farm to your cup" title="A 25-second film: where our coffee comes from, and its way to your cup">
+        <svg class="story-icon" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.2 1.6v8.8L10.4 6z" fill="currentColor"/></svg>
+        <span class="story-label">Our story: from farm to cup</span>
+      </button>
+      <button class="bar-btn" id="soundBtn" type="button" aria-pressed="false" aria-label="Sound off">
+        <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="sound-label">Sound off</span>
+      </button>
+      <button class="bar-btn" id="basketBtn" type="button" aria-label="Basket, 0 items">
+        Basket <span class="basket-count" id="basketCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- First screen: the café is the picture; the wheel chooses the coffee -->
+    <!-- Doorway + café: one pinned stage. Scrolling pushes through the glass door into the room. -->
+    <section class="arrive" id="arrive" aria-labelledby="coffeeName">
+    <div class="hero" id="hero">
+
+      <!-- The café: three lightings of the same room. The wheel blends between them. -->
+      <div class="hero-media" id="heroMedia" aria-hidden="true">
+        <img class="room-img" data-room="morning" src="assets/img/room-morning-1280.jpg"
+             srcset="assets/img/room-morning-1280.jpg 1280w, assets/img/room-morning-2400.jpg 2400w"
+             sizes="(max-width: 899px) 230vw, 100vw" alt="" decoding="async">
+        <img class="room-img" data-room="afternoon" src="assets/img/room-afternoon-1280.jpg"
+             srcset="assets/img/room-afternoon-1280.jpg 1280w, assets/img/room-afternoon-2400.jpg 2400w"
+             sizes="(max-width: 899px) 230vw, 100vw" alt="" decoding="async">
+        <img class="room-img" data-room="evening" src="assets/img/room-evening-1280.jpg"
+             srcset="assets/img/room-evening-1280.jpg 1280w, assets/img/room-evening-2400.jpg 2400w"
+             sizes="(max-width: 899px) 230vw, 100vw" alt="" decoding="async">
+        <div class="tints" id="tints"></div>
+        <div class="shade"></div>
+      </div>
+
+      <canvas class="motes" id="motes" aria-hidden="true"></canvas>
+
+      <!-- The street: the camera pushes towards the glass door as you scroll -->
+      <div class="street" id="street" aria-hidden="true">
+        <div class="street-drift">
+          <img src="assets/img/exterior-1280.jpg"
+               srcset="assets/img/exterior-1280.jpg 1280w, assets/img/exterior-2400.jpg 2400w"
+               sizes="(max-width: 899px) 230vw, 100vw" alt="" fetchpriority="high">
+        </div>
+        <div class="street-shade"></div>
+      </div>
+
+      <!-- the dark of the doorway, between street and room -->
+      <div class="threshold" id="threshold" aria-hidden="true"></div>
+
+      <!-- Doorway words -->
+      <div class="door-copy" id="doorCopy">
+        <p class="eyebrow door-in" style="--i:0">Specialty coffee · Riga</p>
+        <p class="wordmark" aria-label="UMBER">
+          <span class="door-in" style="--i:1">U</span><span class="door-in" style="--i:2">M</span><span class="door-in" style="--i:3">B</span><span class="door-in" style="--i:4">E</span><span class="door-in" style="--i:5">R</span>
+        </p>
+        <p class="door-line door-in" style="--i:7">Five origins. One wheel.<br><em>Turn it until it tastes like you.</em></p>
+        <p class="cue door-in" style="--i:9" aria-hidden="true"><span class="cue-line"></span>Step inside</p>
+      </div>
+
+      <div class="hero-ui" id="heroUI">
+        <!-- The coffee for the current tasting note -->
+        <div class="coffee" id="coffee">
+          <!-- phones and tablets: the coffee itself, with its steam, beside the name -->
+          <div class="coffee-media reveal-load" style="--i:1" aria-hidden="true">
+            <video id="coffeeVideo" muted playsinline loop preload="none" poster="assets/img/coffee-honey-720.jpg"></video>
+          </div>
+          <p class="note-label reveal-load" style="--i:0">
+            Tasting note <span class="note-dot" aria-hidden="true"></span> <strong id="noteName">Honey</strong>
+          </p>
+          <h1 class="coffee-name reveal-load" style="--i:1" id="coffeeName">Colombia Huila</h1>
+          <p class="coffee-desc reveal-load" style="--i:2" id="coffeeDesc">Round and golden, like noon on the counter. Honey, floral sweetness, soft caramel.</p>
+          <dl class="coffee-meta reveal-load" style="--i:3">
+            <div><dt>Beans</dt><dd id="coffeeBeans">Caturra · honey process</dd></div>
+            <div><dt>Brewed as</dt><dd id="coffeeBrew">Latte</dd></div>
+          </dl>
+          <button class="order reveal-load" style="--i:4" id="orderBtn" type="button">
+            <span class="order-label">Order this coffee</span>
+            <span class="order-price">€<span id="coffeePrice">4.60</span><mark class="check" title="Price to confirm">CHECK</mark></span>
+          </button>
+          <!-- To take away: the cups, and the way to the menu and the beans (shop.js) -->
+          <div class="to-go reveal-load" style="--i:5">
+            <img class="to-go-img" src="assets/img/shop/takeaway-still.jpg" alt="" width="96" height="96" decoding="async"
+                 onerror="this.classList.add('is-missing')">
+            <div class="to-go-body">
+              <p class="to-go-line">Hot and iced, to take away</p>
+              <div class="to-go-actions">
+                <a class="to-go-main" href="#menu" data-menu-filter="takeaway">Order takeaway <span aria-hidden="true">→</span></a>
+                <a class="to-go-alt" href="#beans">Explore our coffee</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- The tasting wheel, with the small cup preview above it -->
+        <div class="wheel-wrap reveal-load" style="--i:5">
+          <!-- Preview: appears on hover, tap or selection. Positioned absolutely, so it never shifts the layout. -->
+          <aside class="preview" id="preview" aria-label="Coffee preview" hidden>
+            <div class="preview-media" id="previewMedia">
+              <video class="pm-layer is-front" muted playsinline loop preload="none" aria-hidden="true"></video>
+              <video class="pm-layer" muted playsinline loop preload="none" aria-hidden="true"></video>
+            </div>
+            <div class="preview-body">
+              <p class="preview-note"><span class="note-dot" aria-hidden="true"></span>Notes of <span id="previewNote" class="nowrap">Honey</span></p>
+              <p class="preview-coffee" id="previewCoffee">Colombia Huila</p>
+              <p class="preview-desc" id="previewDesc">Honey, floral sweetness, soft caramel.</p>
+              <p class="preview-meta" id="previewMeta">Caturra · honey process · Latte</p>
+              <div class="preview-foot">
+                <span class="preview-price">€<span id="previewPrice">4.60</span></span>
+                <button class="preview-add" id="previewAdd" type="button">Add this cup</button>
+              </div>
+            </div>
+          </aside>
+
+          <p class="wheel-label">For true coffee lovers</p>
+          <p class="wheel-lede">Five single origins, each brewed the way it tastes best: the finest notes of real coffee.</p>
+          <div class="dial" id="dialEl">
+            <svg class="sectors" id="sectors" aria-hidden="true"></svg>
+            <div class="dial-stops" id="dialStops"></div>
+            <div class="knob" id="knob" role="slider" tabindex="0"
+                 aria-label="Tasting wheel: choose a coffee by tasting note"
+                 aria-valuemin="1" aria-valuemax="5" aria-valuenow="3" aria-valuetext="Honey: Colombia Huila">
+              <div class="knob-face" id="knobFace"><span class="knob-notch"></span></div>
+              <div class="knob-center" aria-hidden="true">
+                <span class="knob-kicker">Tasting<br>note</span>
+                <span class="knob-note" id="knobNote">Honey</span>
+              </div>
+            </div>
+          </div>
+          <p class="dial-hint" id="dialHint">Turn the wheel or tap a note to choose your coffee.</p>
+          <a class="wheel-more" href="#menu">Iced lattes and signature drinks are further down <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+
+      <p class="sr-only" id="announce" aria-live="polite"></p>
+    </div>
+    </section>
+
+    <!-- STORY:START (the story; lab/build-pages.py swaps this block for the lab versions) -->
+    <!-- THE FILM (lab/story-film.js, lab/story-film.css, plan in lab/film/film.js).
+         A short film that starts when you scroll on from the café and then plays by itself.
+         It lies under the café's last screen, so the café is its first frame. -->
+    <section class="sf" id="story" aria-labelledby="sfTitle">
+      <h2 class="sr-only" id="sfTitle">The journey of your coffee, from origin to your cup: a short film</h2>
+      <div class="sf-stage">
+        <video class="sf-video" muted playsinline preload="none" aria-hidden="true"></video>
+        <img class="sf-end" alt="" decoding="async" aria-hidden="true">
+        <div class="sf-shade" aria-hidden="true"></div>
+        <p class="sf-chapter" aria-hidden="true"><span class="sf-kicker"><span class="sf-n"></span> <span class="sf-name"></span></span><span class="sf-line"></span></p>
+        <div class="sf-ui">
+          <div class="sf-progress" aria-hidden="true"><span></span></div>
+          <button class="sf-skip" id="sfSkip" type="button">Skip story <span aria-hidden="true">→</span></button>
+        </div>
+        <button class="sf-play" id="sfPlay" type="button" hidden>Play our story: from farm to cup <span class="sf-play-len">· 25 s</span></button>
+        <p class="sr-only" id="sfStatus" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- After the film: your cup. The same coffee, basket and wheel as the café above. -->
+    <section class="sf-cup" id="yourCup" aria-labelledby="cupTitle" tabindex="-1">
+      <div class="sf-cup-bg" aria-hidden="true"><img alt="" decoding="async"></div>
+      <div class="sf-cup-in">
+        <figure class="sf-cup-media" aria-hidden="true">
+          <video muted playsinline loop preload="none"></video>
+        </figure>
+        <div class="sf-cup-copy">
+          <p class="sf-cup-kicker"><span>05</span> Your senses</p>
+          <h3 class="sf-cup-title" id="cupTitle">From origin to your senses.</h3>
+          <p class="sf-cup-body" data-copy="final"></p>
+          <dl class="coffee-meta">
+            <div><dt>Beans</dt><dd data-copy="beans"></dd></div>
+            <div><dt>Brewed as</dt><dd data-copy="brew"></dd></div>
+          </dl>
+          <div class="sf-cup-actions">
+            <button class="order" id="storyOrder" type="button">
+              <span class="order-label">Order this coffee</span>
+              <span class="order-price">€<span id="storyPrice">4.60</span><mark class="check" title="Price to confirm">CHECK</mark></span>
+            </button>
+            <button class="story-link" id="storyWheel" type="button">Explore the tasting wheel <span aria-hidden="true">↑</span></button>
+          </div>
+          <div class="sf-notes" role="group" aria-label="Choose your coffee by tasting note">
+            <p class="sf-notes-label">Or choose another note</p>
+            <div class="sf-notes-list"></div>
+          </div>
+          <button class="sf-again" id="sfAgain" type="button">Watch the story again <span aria-hidden="true">↺</span></button>
+        </div>
+      </div>
+    </section>
+    <!-- STORY:END -->
+
+    <!-- ============ The menu (shop.js builds the cards from products.js) ============ -->
+    <section class="shop menu" id="menu" aria-labelledby="menuTitle">
+      <div class="shop-in">
+        <header class="shop-head">
+          <p class="shop-kicker">Our menu</p>
+          <h2 class="shop-title" id="menuTitle">Find your perfect coffee</h2>
+          <p class="shop-lede">From classic espresso to signature iced creations, handcrafted with care.</p>
+        </header>
+        <div class="menu-filters" role="group" aria-label="Show drinks" id="menuFilters"></div>
+        <p class="sr-only" id="menuCount" aria-live="polite"></p>
+        <ul class="menu-grid" id="menuGrid"></ul>
+        <p class="shop-note">The menu, recipes, sizes and prices are proposals for UMBER to confirm. <mark class="check" title="Menu to confirm">CHECK</mark></p>
+      </div>
+    </section>
+
+    <!-- ============ Signature creations ============ -->
+    <section class="shop sig" id="signature" aria-labelledby="sigTitle">
+      <div class="shop-in">
+        <header class="shop-head">
+          <p class="shop-kicker">Signature creations</p>
+          <h2 class="shop-title" id="sigTitle">Four cups with a character of their own</h2>
+          <p class="shop-lede">Made with our own coffee, dressed for the season.</p>
+        </header>
+        <ul class="sig-list" id="sigList"></ul>
+      </div>
+    </section>
+
+    <!-- ============ Pour your cup: a small game with the glass mug (pour.js) ============ -->
+    <section class="shop pour" id="pour" aria-labelledby="pourTitle">
+      <div class="shop-in pour-in">
+        <div class="pour-copy">
+          <div class="pour-head">
+            <p class="shop-kicker">Behind the bar</p>
+            <h2 class="shop-title" id="pourTitle">Pour your own cup</h2>
+            <p class="shop-lede">Press and hold to pour. Watch the layers settle in the glass, and we will tell you what you have made.</p>
+          </div>
+          <div class="pour-pads" role="group" aria-label="Ingredients: press and hold to pour" id="pourPads"></div>
+          <div class="pour-result" id="pourResult" aria-live="polite">
+            <p class="pour-verdict" id="pourVerdict">Start with a shot of espresso.</p>
+            <p class="pour-hint" id="pourHint"></p>
+            <div class="pour-actions">
+              <button class="order pour-add" id="pourAdd" type="button" hidden>
+                <span class="order-label">Add this cup</span><span class="order-price" id="pourPrice"></span>
+              </button>
+              <button class="pour-reset" id="pourReset" type="button">Empty the glass</button>
+            </div>
+          </div>
+        </div>
+        <figure class="pour-stage" id="pourStage" aria-hidden="true">
+          <img class="pour-plate" src="assets/img/pour/plate.jpg" alt="" loading="lazy" decoding="async">
+          <canvas class="pour-canvas" id="pourCanvas"></canvas>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ To take away ============ -->
+    <section class="shop togo" id="takeaway" aria-labelledby="togoTitle">
+      <div class="shop-in togo-in">
+        <figure class="togo-media">
+          <img src="assets/img/shop/cups-family.jpg" alt="The UMBER takeaway cups: forest green, cream and the season cup" loading="lazy" decoding="async"
+               onerror="this.parentElement.classList.add('is-missing')">
+        </figure>
+        <div class="togo-copy">
+          <p class="shop-kicker">To take away</p>
+          <h2 class="shop-title" id="togoTitle">Take UMBER with you</h2>
+          <p class="shop-lede">Paper cups with a sleeve that is warm to hold, never plastic. In the café, iced coffee comes in clear glass mugs.</p>
+          <ul class="togo-cups" id="togoCups"></ul>
+          <a class="shop-btn" href="#menu" data-menu-filter="takeaway">Order takeaway <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Coffee for home ============ -->
+    <section class="shop beans" id="beans" aria-labelledby="beansTitle">
+      <div class="shop-in">
+        <header class="shop-head">
+          <p class="shop-kicker">Coffee beans</p>
+          <h2 class="shop-title" id="beansTitle">Bring UMBER home</h2>
+          <p class="shop-lede">One house blend, six single origins and a decaf, whole or ground to order.</p>
+        </header>
+        <ul class="bag-grid" id="bagGrid"></ul>
+        <p class="shop-note">Origins, tasting notes, roast levels, bag weights and prices are proposals to confirm. <mark class="check" title="Coffee range to confirm">CHECK</mark></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="foot" id="visit" aria-labelledby="footTitle">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <p class="foot-mark" id="footTitle">UMBER</p>
+        <p class="foot-line">Specialty coffee in Riga. Five origins on one wheel, a glass of something cold, and a quiet table by the window.</p>
+        <button class="foot-story" type="button" data-watch-story><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.2 1.6v8.8L10.4 6z" fill="currentColor"/></svg> Our story: from farm to cup</button>
+      </div>
+      <div class="foot-col">
+        <h3 class="foot-h">Visit</h3>
+        <p>In the centre of Riga <mark class="check" title="Street address to add">CHECK</mark></p>
+        <p>Mon–Fri 8:00–19:00<br>Sat–Sun 9:00–18:00 <mark class="check" title="Opening hours to confirm">CHECK</mark></p>
+      </div>
+      <div class="foot-col">
+        <h3 class="foot-h">Say hello</h3>
+        <p>At the counter, any time we are open. We love to talk coffee.</p>
+        <p>E-mail, phone and Instagram arrive with the opening. <mark class="check" title="Contacts and Instagram to add">CHECK</mark></p>
+      </div>
+      <nav class="foot-col" aria-label="On this page">
+        <h3 class="foot-h">On this page</h3>
+        <ul class="foot-links">
+          <li><a href="#knob" data-to-wheel>The tasting wheel</a></li>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#signature">Signature creations</a></li>
+          <li><a href="#pour">Pour your own cup</a></li>
+          <li><a href="#takeaway">To take away</a></li>
+          <li><a href="#beans">Coffee beans</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="foot-base">
+      <p>© 2026 UMBER · Riga</p>
+      <p><a class="foot-small" href="checkout.html#terms">Ordering terms</a> · A concept site: no real orders or payments</p>
+    </div>
+  </footer>
+
+  <!-- One product, larger, with its options (shop.js) -->
+  <dialog class="pd" id="productDialog" aria-labelledby="pdName">
+    <form method="dialog" class="pd-close-form"><button class="pd-close" type="submit" aria-label="Close">×</button></form>
+    <div class="pd-body" id="pdBody"></div>
+  </dialog>
+
+  <!-- The basket: what you have chosen (no payment on this site yet) -->
+  <div class="drawer" id="basketDrawer" hidden>
+    <div class="drawer-scrim" data-close></div>
+    <aside class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" tabindex="-1">
+      <header class="drawer-head">
+        <h2 class="drawer-title" id="drawerTitle">Your basket</h2>
+        <button class="drawer-x" type="button" data-close aria-label="Close the basket">×</button>
+      </header>
+      <ul class="drawer-list" id="drawerList"></ul>
+      <p class="drawer-empty" id="drawerEmpty">Nothing here yet. Choose a drink or a bag of coffee.</p>
+      <footer class="drawer-foot">
+        <p class="drawer-total"><span>Total</span> <strong id="drawerTotal">€0.00</strong></p>
+        <a class="order drawer-checkout" id="drawerCheckout" href="checkout.html">
+          <span class="order-label">Checkout</span><span class="order-price" aria-hidden="true">→</span>
+        </a>
+        <p class="drawer-note">Pick up at UMBER, or have coffee beans delivered in Riga. A concept site: nothing is charged.</p>
+      </footer>
+    </aside>
+  </div>
+
+  <script src="app.js" defer></script>
+  <script src="products.js" defer></script>
+  <script src="shop.js" defer></script>
+  <script src="pour.js" defer></script>
+  <!-- STORY-JS --><script src="lab/film/film.js" defer></script>
+  <script src="lab/story-film.js" defer></script><!-- /STORY-JS -->
+</body>
+</html>

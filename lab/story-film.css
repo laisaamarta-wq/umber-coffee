@@ -1,0 +1,170 @@
+/* ==========================================================================
+   UMBER · The film · a short film that plays by itself
+   ========================================================================== */
+/* The film lies under the café's last screen (pulled up by one screen): when you scroll on,
+   the café dissolves into the film's first frame, the same café, and the film plays. */
+html { scrollbar-gutter: stable; }
+html.sf-locked { overflow: hidden; }          /* only while the film plays; Skip or scrolling up releases it */
+html.sf-hide-hero .hero { opacity: 0; }
+.arrive { z-index: 2; }
+.hero { background: rgba(18, 13, 10, var(--hero-bg, 1)); }
+.sf {
+  position: relative; z-index: 1; background: var(--night);
+  height: 100vh; height: 100svh;
+  margin-top: -100vh; margin-top: -100svh;
+}
+.sf-stage { position: relative; height: 100%; overflow: hidden; }
+.sf-video, .sf-end {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: 60% 50%;
+}
+.sf-end { opacity: 0; transition: opacity 0.45s var(--ease-out); }
+.sf-end.is-on { opacity: 1; }
+.sf-shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(18, 13, 10, 0.75) 0%, rgba(18, 13, 10, 0) 34%),
+    linear-gradient(to bottom, rgba(18, 13, 10, 0.45) 0%, rgba(18, 13, 10, 0) 16%);
+}
+
+/* the chapter, said once and briefly, bottom left */
+.sf-chapter {
+  position: absolute; z-index: 3; left: var(--gutter); right: var(--gutter);
+  bottom: calc(env(safe-area-inset-bottom) + 4.6rem);
+  margin: 0; max-width: 28rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  opacity: 0; transform: translate3d(0, 10px, 0);
+  transition: opacity 0.45s var(--ease-out), transform 0.6s var(--ease-out);
+  text-shadow: 0 1px 2px rgba(10, 7, 5, 0.35), 0 2px 24px rgba(10, 7, 5, 0.6);
+  pointer-events: none;
+}
+.sf-chapter.is-on { opacity: 1; transform: none; }
+.sf-kicker { font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); }
+.sf-n { color: var(--ink); }
+.sf-line {
+  font-family: var(--f-display); font-weight: 300; font-variation-settings: "opsz" 144;
+  font-size: clamp(1.6rem, 1.1rem + 2.2vw, 3rem); line-height: 1.05; letter-spacing: -0.01em; text-wrap: balance;
+}
+
+/* progress and Skip: one quiet row along the bottom */
+.sf-ui {
+  position: absolute; z-index: 4; left: var(--gutter); right: var(--gutter);
+  bottom: calc(env(safe-area-inset-bottom) + 1.1rem);
+  display: flex; align-items: center; gap: 1rem;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.4s var(--ease-out), visibility 0s linear 0.4s;
+}
+.sf.is-playing .sf-ui { opacity: 1; visibility: visible; transition: opacity 0.4s var(--ease-out) 0.3s, visibility 0s; }
+.sf-progress { position: relative; flex: 1; height: 2px; border-radius: 1px; overflow: hidden; background: rgba(244, 236, 226, 0.2); }
+.sf-progress span { position: absolute; inset: 0; background: var(--ink); transform-origin: 0 50%; transform: scaleX(0); }
+.sf-skip {
+  flex: none; min-height: 44px; padding: 0 1.1rem;
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  border-radius: 999px; border: 1px solid rgba(244, 236, 226, 0.28);
+  background: rgba(18, 13, 10, 0.55);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: var(--ink); font: 600 var(--t-s)/1 var(--f-text); letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), transform 0.35s var(--ease-out);
+}
+.sf-skip:hover { background: rgba(18, 13, 10, 0.75); border-color: rgba(244, 236, 226, 0.5); }
+.sf-skip:hover span { transform: translateX(2px); }
+.sf-skip span { display: inline-block; transition: transform 0.3s var(--ease-out); }
+.sf-skip.is-hint { border-color: var(--ink); transform: translateY(-2px); }
+
+/* with reduced motion the film waits for a tap */
+.sf-play {
+  position: absolute; z-index: 4; left: var(--gutter); bottom: calc(env(safe-area-inset-bottom) + 4.5rem);
+  min-height: 52px; padding: 0 1.5rem; border-radius: 999px; border: 0;
+  background: var(--ink); color: var(--night); font: 600 var(--t-m)/1 var(--f-text); cursor: pointer;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+.sf-play-len { font-weight: 500; opacity: 0.6; }
+.sf.is-reduced { margin-top: 0; }
+.sf.is-reduced .sf-end { opacity: 1; }
+.sf.is-reduced.is-playing .sf-end { opacity: 0; }
+
+/* ---------- Your cup: the film's last moment, carried on into the coffee itself ---------- */
+.sf-cup {
+  position: relative; z-index: 1; overflow: hidden;
+  min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: center;
+  padding: calc(env(safe-area-inset-top) + 6rem) var(--gutter) calc(env(safe-area-inset-bottom) + 4rem);
+  background: var(--night);
+}
+.sf-cup:focus { outline: none; }
+.sf-cup-bg { position: absolute; inset: 0; pointer-events: none; }
+.sf-cup-bg img {
+  position: absolute; inset: -4%; width: 108%; height: 108%;
+  object-fit: cover; object-position: 60% 40%;
+  filter: blur(28px) saturate(1.05); opacity: 0.42;
+}
+.sf-cup-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(18, 13, 10, 0.2), rgba(18, 13, 10, 0.75) 55%, var(--night));
+}
+.sf-cup-in {
+  position: relative; width: 100%; max-width: 72rem; margin: 0 auto;
+  display: grid; gap: 2.25rem; align-items: center;
+}
+.sf-cup-media {
+  margin: 0; width: min(100%, 26rem); aspect-ratio: 4 / 5; justify-self: center;
+  border-radius: 14px; overflow: hidden;
+  background: #17110d; border: 1px solid rgba(244, 236, 226, 0.14);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+.sf-cup-media video {
+  width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%;
+  transform: scale(1.08); transform-origin: 50% 66%;
+  transition: opacity 0.35s var(--ease-out);
+}
+.sf-cup.is-swapping .sf-cup-media video, .sf-cup.is-swapping .sf-cup-body { opacity: 0; }
+.sf-cup-body { transition: opacity 0.3s var(--ease-out); }
+.sf-cup-kicker {
+  margin: 0; font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft);
+}
+.sf-cup-kicker span { color: var(--ink); }
+.sf-cup-title {
+  margin: 0.7rem 0 0; font-family: var(--f-display); font-weight: 300; font-variation-settings: "opsz" 144;
+  font-size: clamp(2.2rem, 1.4rem + 3.4vw, 4.5rem); line-height: 1.02; letter-spacing: -0.015em; text-wrap: balance;
+}
+.sf-cup-body { margin: 1rem 0 0; max-width: 36ch; font-size: var(--t-l); line-height: 1.45; color: var(--ink-soft); }
+.sf-cup-actions { margin-top: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; }
+.sf-cup-actions .order { margin-top: 0; }
+.sf-notes { margin-top: 2rem; }
+.sf-notes-label { margin: 0 0 0.6rem; font-size: var(--t-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
+.sf-notes-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.sf-note {
+  min-height: 40px; padding: 0 0.95rem; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  border: 1px solid rgba(244, 236, 226, 0.22); background: transparent;
+  color: var(--ink-soft); font: 500 var(--t-s)/1 var(--f-text); cursor: pointer;
+  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
+}
+.sf-note::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--ink-faint)); }
+.sf-note:hover { color: var(--ink); border-color: rgba(244, 236, 226, 0.45); }
+.sf-note[aria-pressed="true"] { background: var(--ink); color: var(--night); border-color: var(--ink); }
+.sf-again {
+  margin-top: 2rem; min-height: 44px; padding: 0;
+  background: none; border: 0; color: var(--ink-faint);
+  font: 500 var(--t-s)/1 var(--f-text); letter-spacing: 0.03em; cursor: pointer;
+}
+.sf-again:hover { color: var(--ink); }
+
+@media (min-width: 900px) {
+  .sf-video, .sf-end { object-position: 50% 50%; }
+  .sf-chapter { bottom: calc(env(safe-area-inset-bottom) + 5rem); }
+  .sf-cup-in { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2.5rem, 6vw, 6rem); }
+  .sf-cup-media { justify-self: end; }
+}
+@media (max-width: 899px) {
+  .sf-cup { padding-top: calc(env(safe-area-inset-top) + 5rem); }
+  .sf-cup-media { width: min(100%, 15rem); aspect-ratio: 1; }
+  .sf-cup-in { gap: 1.75rem; }
+  .sf-skip { padding: 0 0.95rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-chapter, .sf-end, .sf-ui, .sf-skip, .sf-skip span { transition: none; }
+}
+/* story lab only: the version label steps aside while the film plays */
+html.sf-locked .lab-badge { opacity: 0; pointer-events: none; }

@@ -1,0 +1,28 @@
+# UMBER · what NOT to upload when the site is published (Vercel reads this file).
+# The live site needs only index.html, checkout.html, their css/js, lab/story-film.* +
+# lab/film/film.js, and the assets the pages use (about 25 MB). Everything below is
+# source material, backups and experiments (about 750 MB).
+_source
+_v1-bright-to-deep
+README.md
+CREDITS.md
+.gitignore
+.DS_Store
+# the lab: other story versions, backups, frames and build scripts
+story-*.html
+story.js
+lab/*
+!lab/story-film.js
+!lab/story-film.css
+!lab/film
+lab/film/*
+!lab/film/film.js
+# films and pictures the live page does not use
+assets/film/umber-animatic*
+assets/film/umber-film*
+assets/film/v2
+assets/img/cup-0*
+assets/img/ritual-*
+assets/img/roaster-*
+assets/img/story-*
+assets/video/story-*

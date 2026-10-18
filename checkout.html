@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" data-checks="hide">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>UMBER · Checkout</title>
+  <meta name="description" content="Your UMBER order: pick up at the café in Riga, or have coffee beans delivered.">
+  <meta name="theme-color" content="#f7f2ea">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="shop.css">
+  <link rel="stylesheet" href="checkout.css">
+</head>
+<body class="co-page">
+  <a class="skip" href="#coMain">Skip to the order</a>
+
+  <header class="co-bar">
+    <a class="co-brand" href="index.html" aria-label="UMBER, back to the café">
+      <span class="co-mark">UMBER</span>
+      <span class="co-sub">Specialty coffee · Riga</span>
+    </a>
+    <a class="co-back" href="index.html#menu"><span aria-hidden="true">←</span> Back to the menu</a>
+  </header>
+
+  <main class="co" id="coMain">
+    <!-- Messages: back from the payment page, or the demo note -->
+    <div class="co-banner" id="coBanner" role="status" hidden></div>
+
+    <!-- ============ The order form ============ -->
+    <div class="co-grid" id="coForm">
+      <form class="co-steps" id="checkoutForm" novalidate>
+        <header class="co-head">
+          <p class="shop-kicker">Checkout</p>
+          <h1 class="co-title">Your order</h1>
+        </header>
+
+        <!-- 1. What you are ordering -->
+        <section class="co-step" aria-labelledby="stepItems">
+          <h2 class="co-h" id="stepItems"><span class="co-n">1</span> In your basket</h2>
+          <ul class="co-lines" id="coLines"></ul>
+          <p class="co-empty" id="coEmpty" hidden>Your basket is empty. <a href="index.html#menu">Choose a drink</a> or <a href="index.html#beans">a bag of coffee</a>.</p>
+        </section>
+
+        <!-- 2. Pick up or delivery -->
+        <fieldset class="co-step" id="stepHow">
+          <legend class="co-h"><span class="co-n">2</span> How you would like it</legend>
+          <div class="co-choices">
+            <label class="co-choice">
+              <input type="radio" name="fulfilment" value="pickup" checked>
+              <span class="co-choice-body">
+                <span class="co-choice-title">Pick up at UMBER</span>
+                <span class="co-choice-text">Ready at the counter when you arrive. Free.</span>
+              </span>
+            </label>
+            <label class="co-choice" id="deliveryChoice">
+              <input type="radio" name="fulfilment" value="delivery">
+              <span class="co-choice-body">
+                <span class="co-choice-title">Delivery in Riga</span>
+                <span class="co-choice-text" id="deliveryText">Coffee beans only, by courier.</span>
+              </span>
+            </label>
+          </div>
+          <p class="co-note" id="deliveryNote" hidden></p>
+        </fieldset>
+
+        <!-- 3. When (pickup) or where (delivery) -->
+        <fieldset class="co-step" id="stepWhen">
+          <legend class="co-h"><span class="co-n">3</span> <span id="whenTitle">When you will pick it up</span></legend>
+          <div id="pickupFields">
+            <label class="co-field">
+              <span class="co-label">Pickup time</span>
+              <select name="pickupTime" id="pickupTime"></select>
+            </label>
+            <p class="co-note" id="hoursNote"></p>
+          </div>
+          <div id="deliveryFields" hidden>
+            <label class="co-field">
+              <span class="co-label">Street and house</span>
+              <input type="text" name="street" autocomplete="address-line1" maxlength="120">
+              <span class="co-error" data-error-for="street"></span>
+            </label>
+            <div class="co-row">
+              <label class="co-field">
+                <span class="co-label">Apartment <small>(optional)</small></span>
+                <input type="text" name="apartment" autocomplete="address-line2" maxlength="40">
+              </label>
+              <label class="co-field">
+                <span class="co-label">Postcode</span>
+                <input type="text" name="postcode" autocomplete="postal-code" inputmode="numeric" placeholder="LV-1001" maxlength="8">
+                <span class="co-error" data-error-for="postcode"></span>
+              </label>
+            </div>
+            <p class="co-note">Riga only. We deliver within two working days. <mark class="check" title="Delivery area and time to confirm">CHECK</mark></p>
+          </div>
+        </fieldset>
+
+        <!-- 4. Who it is for -->
+        <fieldset class="co-step">
+          <legend class="co-h"><span class="co-n">4</span> Your details</legend>
+          <label class="co-field">
+            <span class="co-label">Name</span>
+            <input type="text" name="name" autocomplete="name" maxlength="80" required>
+            <span class="co-error" data-error-for="name"></span>
+          </label>
+          <div class="co-row">
+            <label class="co-field">
+              <span class="co-label">E-mail</span>
+              <input type="email" name="email" autocomplete="email" maxlength="120" required>
+              <span class="co-error" data-error-for="email"></span>
+            </label>
+            <label class="co-field">
+              <span class="co-label">Phone</span>
+              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+371" maxlength="20" required>
+              <span class="co-error" data-error-for="phone"></span>
+            </label>
+          </div>
+          <label class="co-field">
+            <span class="co-label">A note for the barista <small>(optional)</small></span>
+            <textarea name="note" rows="2" maxlength="300" placeholder="Oat milk, extra hot, no sugar…"></textarea>
+          </label>
+        </fieldset>
+
+        <!-- 5. Pay -->
+        <section class="co-step" aria-labelledby="stepPay">
+          <h2 class="co-h" id="stepPay"><span class="co-n">5</span> Payment</h2>
+          <div class="co-methods" role="radiogroup" aria-label="Payment method">
+            <label class="co-method">
+              <input type="radio" name="method" value="apple" checked>
+              <span class="co-method-mark co-apple" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8c-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.8zM14.1 5.8c.6-.8 1.1-1.9 1-3-1 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg></span>
+              <span class="co-method-name">Apple Pay</span>
+            </label>
+            <label class="co-method">
+              <input type="radio" name="method" value="google">
+              <span class="co-method-mark co-gpay" aria-hidden="true">G</span>
+              <span class="co-method-name">Google Pay</span>
+            </label>
+            <label class="co-method">
+              <input type="radio" name="method" value="card">
+              <span class="co-method-mark co-card" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 9.5h19" stroke="currentColor" stroke-width="2.4"/></svg></span>
+              <span class="co-method-name">Card <small>•••• 4242 · demo</small></span>
+            </label>
+          </div>
+          <p class="co-pay-line">This is a concept site: paying here shows how the order would go, but no payment is taken and no card details are asked for.</p>
+          <label class="co-check">
+            <input type="checkbox" name="terms" required>
+            <span>I agree to the <a href="#terms">ordering terms</a>.</span>
+          </label>
+          <span class="co-error" data-error-for="terms"></span>
+          <button class="order co-pay" id="payBtn" type="submit">
+            <span class="order-label">Pay</span><span class="order-price" id="payTotal">€0.00</span>
+          </button>
+          <p class="co-error co-form-error" id="formError" role="alert"></p>
+        </section>
+      </form>
+
+      <!-- The summary, beside the form on large screens -->
+      <aside class="co-summary" aria-labelledby="sumTitle">
+        <div class="co-summary-in">
+          <h2 class="co-h co-sum-h" id="sumTitle">Summary</h2>
+          <dl class="co-sum">
+            <div><dt>Items</dt><dd id="sumItems">€0.00</dd></div>
+            <div><dt id="sumHowLabel">Pickup</dt><dd id="sumHow">Free</dd></div>
+            <div class="co-sum-total"><dt>Total</dt><dd id="sumTotal">€0.00</dd></div>
+          </dl>
+          <p class="co-vat">Concept site: no payment is taken. Prices include 21% VAT. <mark class="check" title="VAT to confirm">CHECK</mark></p>
+          <p class="co-where">Pick up at UMBER, in the centre of Riga <mark class="check" title="Street address to add">CHECK</mark></p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ============ After paying: the confirmation ============ -->
+    <section class="co-done" id="coDone" hidden aria-labelledby="doneTitle" tabindex="-1">
+      <div class="co-tick" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg></div>
+      <p class="shop-kicker" id="doneKicker">Thank you</p>
+      <h1 class="co-title" id="doneTitle">Your order is in</h1>
+      <p class="co-done-lede" id="doneLede"></p>
+      <dl class="co-done-meta" id="doneMeta"></dl>
+      <ul class="co-lines co-lines-done" id="doneLines"></ul>
+      <p class="co-concept">A concept site: no payment was taken and the order was not sent to the café.</p>
+      <a class="order co-again" href="index.html"><span class="order-label">Back to the café</span><span class="order-price" aria-hidden="true">→</span></a>
+    </section>
+
+    <!-- ============ Ordering terms (proposed, to confirm) ============ -->
+    <section class="co-terms" id="terms" aria-labelledby="termsTitle">
+      <h2 class="co-h" id="termsTitle">Ordering terms <mark class="check" title="Terms to confirm with the café and a lawyer">CHECK</mark></h2>
+      <ul>
+        <li>Drinks are made when you arrive or at the pickup time you choose, and are kept for 20 minutes after it.</li>
+        <li>Coffee beans can be picked up or delivered in Riga within two working days.</li>
+        <li>You pay when you order. If we cannot make your order, we refund it in full to the same card.</li>
+        <li>Drinks cannot be returned once made. Unopened bags of coffee can be returned within 14 days.</li>
+        <li>We use your name, e-mail and phone only for this order.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="order-config.js" defer></script>
+  <script src="checkout.js" defer></script>
+</body>
+</html>
