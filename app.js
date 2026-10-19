@@ -333,6 +333,7 @@
   // on a desktop the card with the coffee's photo stays open while the wheel is in view,
   // so the coffee on offer can always be seen (on phones the photo sits beside its name)
   const deskCard = matchMedia("(min-width: 1100px) and (hover: hover)");
+  const phoneStage = matchMedia("(max-width: 899px)");
   let cardShown = false;
   // leaving the wheel area: go back to the selected coffee, or close if nothing was chosen yet
   const wheelWrap = dialEl.closest(".wheel-wrap");
@@ -701,7 +702,9 @@
     heroMedia.style.transform = reduced || settle >= 1 ? "none" : `scale(${(1.16 - 0.16 * settle).toFixed(4)})`;
 
     // 3. the coffee, the wheel and the card arrive
-    const d = easeOut(seg(p, 0.58, 0.7));
+    // (phones: the photograph fills only the top, so they come in as the doorway's dark lifts,
+    // and the screen is never left half empty)
+    const d = phoneStage.matches ? easeOut(seg(p, 0.44, 0.58)) : easeOut(seg(p, 0.58, 0.7));
     heroUI.style.opacity = d.toFixed(3);
     heroUI.style.transform = reduced || d >= 1 ? "none" : `translate3d(0, ${((1 - d) * 24).toFixed(1)}px, 0)`;
     heroUI.classList.toggle("is-ready", d > 0);

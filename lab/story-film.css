@@ -157,6 +157,18 @@ html.sf-hide-hero .hero { opacity: 0; }
   .sf-cup-in { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2.5rem, 6vw, 6rem); }
   .sf-cup-media { justify-self: end; }
 }
+/* phones held upright: the film in a calmer, wider frame (about four by five) instead of a tight
+   crop of its middle; it fades into the dark above and below, the words sit underneath */
+@media (max-width: 899px) and (max-aspect-ratio: 4/5) {
+  .sf-video, .sf-end {
+    inset: auto 0;
+    --sf-h: min(125vw, 66svh);
+    top: max(calc(env(safe-area-inset-top) + 4.25rem), calc(50% - var(--sf-h) / 2 - 3rem));
+    height: var(--sf-h);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 13%, #000 85%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 13%, #000 85%, transparent 100%);
+  }
+}
 @media (max-width: 899px) {
   .sf-cup { padding-top: calc(env(safe-area-inset-top) + 5rem); }
   .sf-cup-media { width: min(100%, 15rem); aspect-ratio: 1; }

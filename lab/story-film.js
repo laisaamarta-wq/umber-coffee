@@ -79,17 +79,22 @@
   const motes = document.getElementById("motes");
   // phones: the hero photograph fills only the top of the screen; it opens up to the film's
   // full-screen framing of the same café before the two meet, so the room never jumps
-  const fit = { s: 1, tx: 0 };
+  // (on phones held upright the film has its own calmer frame, story-film.css: the photograph
+  // moves to exactly that frame)
+  const fit = { s: 1, tx: 0, ty: 0, move: false };
   function measureFit() {
     const hm = heroMedia.offsetHeight || H;
     const img = heroMedia.querySelector(".room-img");
     const A = img && img.naturalWidth ? img.naturalWidth / img.naturalHeight : 1280 / 714;
     const px = parseFloat(getComputedStyle(img || heroMedia).objectPosition) / 100 || 0.5;
-    const pv = W >= 900 ? 0.5 : 0.6;                               // the film's framing (story-film.css)
-    fit.s = Math.max(1, H / hm);
+    const pv = (parseFloat(getComputedStyle(video).objectPosition) || 50) / 100;   // the film's framing
+    const fh = video.offsetHeight || H, ft = video.offsetTop || 0;                  // the film's frame
+    fit.s = fh / hm;
+    fit.ty = ft;
+    fit.move = Math.abs(fit.s - 1) > 0.01 || Math.abs(fit.ty) > 2;
     const w1 = Math.max(W, hm * A), x1 = (W - w1) * px;
-    const w2 = Math.max(W, H * 16 / 9), x2 = (W - w2) * pv;
-    fit.tx = fit.s > 1.01 ? x2 - (W / 2 + (x1 - W / 2) * fit.s) : 0;
+    const w2 = Math.max(W, fh * 16 / 9), x2 = (W - w2) * pv;
+    fit.tx = fit.move ? x2 - (W / 2 + (x1 - W / 2) * fit.s) : 0;
   }
   let hand = 0;   // 0: the café as on the homepage · 1: the film
   function handover(p) {
@@ -109,8 +114,8 @@
     const z = ease(seg(p, 0, 0.55));
     const sc = (1 + (fit.s - 1) * z) * (1 + 0.025 * ease(p));        // and the camera starts to move
     heroMedia.style.transformOrigin = "50% 0";
-    heroMedia.style.transform = `translate3d(${(fit.tx * z).toFixed(1)}px, 0, 0) scale(${sc.toFixed(4)})`;
-    const fade = fit.s > 1.01 ? ease(seg(p, 0.45, 0.95)) : ease(seg(p, 0.15, 0.8));
+    heroMedia.style.transform = `translate3d(${(fit.tx * z).toFixed(1)}px, ${(fit.ty * z).toFixed(1)}px, 0) scale(${sc.toFixed(4)})`;
+    const fade = fit.move ? ease(seg(p, 0.45, 0.95)) : ease(seg(p, 0.15, 0.8));
     heroMedia.style.opacity = (1 - fade).toFixed(3);
     motes.style.opacity = (1 - fade).toFixed(3);
     hero.style.setProperty("--hero-bg", (1 - fade).toFixed(3));
