@@ -17,6 +17,7 @@
   const seg = (t, a, b) => clamp((t - a) / (b - a));
   const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const phone = matchMedia("(max-width: 899px)");
   const html = document.documentElement;
   const $ = (s, el = root) => el.querySelector(s);
 
@@ -311,6 +312,9 @@
     const y = scrollY, down = y > lastY;
     lastY = y;
     if (state === "playing" || state === "done" || state === "still") return;
+    // phones: the page scrolls on freely; the film plays when asked (the play button in the top bar,
+    // "Our story" at the foot of the page, "Watch the story again" under your cup)
+    if (phone.matches) return;
     if (y > top - 1.5 * H) load();                 // close: get the film ready
     // one deliberate scroll on from the café starts it (a jump far down the page does not)
     // (a jump made by a link, such as "Order takeaway", passes the film by: shop.js marks it)

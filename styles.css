@@ -148,6 +148,14 @@ html[data-checks="hide"] .check { display: none !important; }
 
 /* ---------- First screen: doorway + café on one pinned stage ---------- */
 .arrive { position: relative; height: 290vh; height: 290svh; }
+@media (max-width: 899px) { .arrive { height: 230vh; height: 230svh; } }   /* phones: a shorter doorway (app.js) */
+/* phones: what steps back on a shorter screen so the coffee never slides under the top bar (app.js, fitHero) */
+@media (max-width: 899px) {
+  .hero-ui.fit-1 .wheel-lede { display: none; }
+  .hero-ui.fit-1 .wheel-label { margin-bottom: 0.4rem; }
+  .hero-ui.fit-2 .dial-hint { display: none; }
+  .hero-ui.fit-3 .to-go { display: none; }
+}
 .hero {
   position: sticky; top: 0;
   height: 100vh; height: 100svh;
@@ -390,7 +398,7 @@ html[data-checks="hide"] .check { display: none !important; }
   max-width: calc(100vw - 2 * var(--gutter));
   padding: 48px 0 6px;
   display: flex; justify-content: center; align-items: flex-start;
-  touch-action: none;
+  touch-action: pan-y;               /* a swipe on the wheel still scrolls the page; the knob itself turns */
   user-select: none; -webkit-user-select: none;
 }
 .sectors {
@@ -421,7 +429,7 @@ html[data-checks="hide"] .check { display: none !important; }
   width: var(--size); height: var(--size);
   border-radius: 50%;
   cursor: grab;
-  touch-action: none;
+  touch-action: pan-y;               /* a finger turns it sideways; an up or down swipe scrolls the page */
 }
 .knob:active { cursor: grabbing; }
 .knob-face {
@@ -548,26 +556,22 @@ html[data-checks="hide"] .check { display: none !important; }
   transition: opacity 0.35s var(--ease-out);
 }
 .coffee.is-swapping .coffee-media video { opacity: 0; }
-/* the cup sits beside the name; its foot stays level with the name's last line, so it keeps
-   its place whether the name takes one line or two, and never covers the beans and brew */
+/* the cup sits beside the coffee's words (note, name, beans and brew), level with them: its foot
+   on the brew line. It keeps that place for every coffee, one-line name or two, and covers nothing */
 @media (max-width: 1099px) {
   .coffee {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-rows: minmax(0, 1fr) auto auto auto;
+    grid-template-rows: minmax(0, 1fr) auto auto auto auto;
     column-gap: 0.9rem;
   }
-  .coffee-media { position: relative; top: auto; right: auto; grid-column: 2; grid-row: 1 / 5; align-self: end; }
+  .coffee-media { position: relative; top: auto; right: auto; grid-column: 2; grid-row: 1 / 6; align-self: end; }
   .coffee > .note-label { grid-column: 1; grid-row: 2; align-self: end; }
   .coffee > .coffee-name { grid-column: 1; grid-row: 3; }
   .coffee > .coffee-desc { grid-column: 1; grid-row: 4; }
-  .coffee > .coffee-meta, .coffee > .order, .coffee > .to-go { grid-column: 1 / -1; }
+  .coffee > .coffee-meta { grid-column: 1; grid-row: 5; flex-direction: column; gap: 0.2rem; }
+  .coffee > .order, .coffee > .to-go { grid-column: 1 / -1; }
   .coffee > .order { justify-self: start; }
-  /* beans and brew on one line wherever it fits, so the name and the cup keep their place */
-  .coffee-meta { column-gap: 1rem; }
-}
-@media (max-width: 379px) {
-  .coffee-meta { min-height: 3rem; align-content: flex-start; }
 }
 
 /* ---------- The wheel label ---------- */

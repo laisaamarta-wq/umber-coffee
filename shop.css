@@ -395,7 +395,7 @@ html.sf-locked .story-btn { opacity: 0.45; pointer-events: none; }
   display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0 1rem 0 0.8rem;
   border-radius: 999px; border: 1px solid var(--cocoa-line); background: var(--paper); color: var(--cocoa);
   font: 600 var(--t-s)/1 var(--f-text); cursor: pointer; user-select: none; -webkit-user-select: none;
-  touch-action: none; -webkit-touch-callout: none;
+  touch-action: pan-y; -webkit-touch-callout: none;   /* a swipe that starts on a pad still scrolls the page */
   transition: transform 0.25s var(--ease-out), border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
 }
 .pour-pad:hover { border-color: rgba(42, 29, 22, 0.4); }

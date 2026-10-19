@@ -778,15 +778,29 @@
       b.innerHTML = `<span class="pour-dot" aria-hidden="true"></span>${x.label}`;
       b.setAttribute("aria-label", x.ice ? "Add an ice cube" : x.dust ? `Dust ${x.label.toLowerCase()} on top` : `Pour ${x.label.toLowerCase()}, press and hold`);
       const act = () => (x.ice ? addIce() : x.dust ? addDust(x) : startPour(x, b));
+      // a finger: holding still pours, a quick tap pours a splash, and a swipe that starts here scrolls the page
+      let touchWait = 0, splash = false;
       b.addEventListener("pointerdown", (e) => {
         if (e.button !== 0) return;
+        if (e.pointerType === "touch") {
+          clearTimeout(touchWait);
+          touchWait = setTimeout(() => { touchWait = 0; act(); }, 140);
+          return;
+        }
         e.preventDefault();
         b.setPointerCapture(e.pointerId);
         act();
       });
-      b.addEventListener("pointerup", stopPour);
-      b.addEventListener("pointercancel", stopPour);
-      b.addEventListener("lostpointercapture", stopPour);
+      b.addEventListener("pointerup", () => {
+        if (touchWait) {
+          clearTimeout(touchWait); touchWait = 0; act();
+          splash = true; setTimeout(() => { splash = false; stopPour(); }, 400);
+          return;
+        }
+        stopPour();
+      });
+      b.addEventListener("pointercancel", () => { clearTimeout(touchWait); touchWait = 0; stopPour(); });
+      b.addEventListener("lostpointercapture", () => { if (!splash) stopPour(); });
       // keyboard: hold Space or Enter to pour
       b.addEventListener("keydown", (e) => {
         if (e.key !== "Enter" && e.key !== " ") return;

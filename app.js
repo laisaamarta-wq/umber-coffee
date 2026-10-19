@@ -358,8 +358,30 @@
     return { a: (Math.atan2(dx, -dy) * 180) / Math.PI, dist: Math.hypot(dx, dy) };
   }
 
+  // a finger turns the wheel only from the knob, and only once it moves sideways: an up or down swipe,
+  // anywhere on the wheel, scrolls the page and leaves the coffee as it is
+  let touchFrom = null;
   dialEl.addEventListener("pointerdown", (e) => {
     if (e.target.closest(".dial-stop, .sector-hit")) return; // those are taps, not drags
+    if (e.pointerType === "touch") {
+      touchFrom = e.target.closest(".knob") ? { x: e.clientX, y: e.clientY, id: e.pointerId } : null;
+      return;
+    }
+    startDrag(e);
+  });
+  dialEl.addEventListener("pointermove", (e) => {
+    if (!touchFrom || e.pointerId !== touchFrom.id) return;
+    const dx = e.clientX - touchFrom.x, dy = e.clientY - touchFrom.y;
+    if (Math.hypot(dx, dy) < 8) return;
+    const sideways = Math.abs(dx) >= Math.abs(dy);
+    touchFrom = null;
+    if (sideways) startDrag(e);
+  });
+  const forgetTouch = () => { touchFrom = null; };
+  dialEl.addEventListener("pointerup", forgetTouch);
+  dialEl.addEventListener("pointercancel", forgetTouch);
+
+  function startDrag(e) {
     dragging = true;
     interacted = true;
     knob.classList.remove("is-nudge"); dialEl.classList.add("is-touched");
@@ -367,7 +389,7 @@
     lastAngle = pointerAngle(e).a;
     knob.focus({ preventScroll: true });
     e.preventDefault();
-  });
+  }
 
   dialEl.addEventListener("pointermove", (e) => {
     if (!dragging) return;
@@ -397,7 +419,8 @@
   };
   dialEl.addEventListener("pointerup", endDrag);
   dialEl.addEventListener("pointercancel", endDrag);
-  dialEl.addEventListener("lostpointercapture", endDrag);
+  // (a finger's touch is first held by the knob; handing it to the wheel is not the end of the drag)
+  dialEl.addEventListener("lostpointercapture", (e) => { if (e.target === dialEl) endDrag(); });
 
   knob.addEventListener("keydown", (e) => {
     const keys = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 };
@@ -683,6 +706,9 @@
   }
 
   function renderStage(p) {
+    // phones: the doorway is shorter (styles.css) and the café is fully in place a little before
+    // the stage lets go, so every swipe moves something and none lands on a still screen
+    if (phoneStage.matches) p = Math.min(1, p * 0.78);
     // 1. towards the door, through its dark glass
     const push = easeInOut(seg(p, 0, 0.42));
     const dark = easeInOut(seg(p, 0.3, 0.4)) * (1 - easeInOut(seg(p, 0.42, 0.54)));
@@ -779,12 +805,35 @@
       else if (v.src && (v === coffeeVideo || v.classList.contains("is-front"))) v.play().catch(() => {});
     });
   }).observe(hero);
-  function layout() { layoutDial(); motes.resize(); layoutStage(); }
+  /* ---------- Phones: the coffee and the wheel always fit under the top bar ----------
+     Measured with the longest coffee, so nothing comes and goes as you turn the wheel. On shorter
+     screens the quieter lines step back, in turn: the wheel's sentence, then its hint, then the takeaway box (takeaway is also in the menu and further down the page). */
+  const FIT = ["fit-1", "fit-2", "fit-3"];
+  function fitHero() {
+    heroUI.classList.remove(...FIT);
+    if (!phoneStage.matches) return;
+    const coffeeEl = $("coffee"), parts = ["coffeeName", "coffeeDesc", "coffeeBeans", "coffeeBrew"].map($);
+    const keep = parts.map((el) => el.textContent);
+    const now = coffeeEl.offsetHeight;
+    let worst = now;
+    STOPS.forEach((s) => {
+      [s.coffee, `${s.line} ${s.notes}`, s.beans, s.brew].forEach((t, k) => { parts[k].textContent = t; });
+      worst = Math.max(worst, coffeeEl.offsetHeight);
+    });
+    parts.forEach((el, k) => { el.textContent = keep[k]; });
+    const room = () => coffeeEl.offsetTop - (worst - now) - bar.getBoundingClientRect().bottom - 8;
+    for (const level of FIT) {
+      if (room() >= 0) break;
+      heroUI.classList.add(level);
+    }
+  }
+
+  function layout() { fitHero(); layoutDial(); motes.resize(); layoutStage(); }
   layout();
   renderDial();
   addEventListener("resize", layout);
   addEventListener("load", layout);
-  document.fonts?.ready.then(layoutDial);
+  document.fonts?.ready.then(() => { fitHero(); layoutDial(); });
   requestAnimationFrame(tick);
 
 })();
