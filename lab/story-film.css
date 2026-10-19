@@ -159,6 +159,10 @@ html.sf-hide-hero .hero { opacity: 0; }
 }
 /* phones held upright: the film in a calmer, wider frame (about four by five) instead of a tight
    crop of its middle; it fades into the dark above and below, the words sit underneath */
+/* phones: the film is its own screen after the café (lab/story-film.js plays it while it is in view) */
+@media (max-width: 899px) {
+  .sf { margin-top: 0; }
+}
 @media (max-width: 899px) and (max-aspect-ratio: 4/5) {
   .sf-video, .sf-end {
     inset: auto 0;

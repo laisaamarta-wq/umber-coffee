@@ -18,6 +18,9 @@
   const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const phone = matchMedia("(max-width: 899px)");
+  // phones: the film is a screen of its own in the page; it plays while you look at it and the page
+  // always scrolls on (no hold, no hand-over from the café)
+  const inline = () => phone.matches && !reduced;
   const html = document.documentElement;
   const $ = (s, el = root) => el.querySelector(s);
 
@@ -71,7 +74,7 @@
     H = innerHeight; W = innerWidth;
     top = root.getBoundingClientRect().top + scrollY;   // = where the café's pinned screen ends
     measureFit();
-    if (state === "playing") scrollTo(0, top);
+    if (state === "playing" && !inline()) scrollTo(0, top);
   }
 
   /* ---------- The café hands over to the film ---------- */
@@ -213,7 +216,13 @@
       playStill();
       return;
     }
-    if (state === "playing") return;
+    if (state === "playing" && !inline()) return;
+    if (inline()) {                                  // phones: go to the film's screen and play it there
+      state = "idle";
+      const far = Math.abs(scrollY - top) > 2.5 * H;
+      scrollTween(top, far ? 1100 : 800).then(() => playInline(true));
+      return;
+    }
     state = "idle";
     endImg.classList.remove("is-on");
     try { video.currentTime = 0; } catch (_) {}
@@ -269,7 +278,8 @@
   }
 
   video.addEventListener("ended", () => {
-    if (state === "playing") finish(false);
+    if (state === "playing" && inline()) endInline();
+    else if (state === "playing") finish(false);
     else if (state === "still") { root.classList.remove("is-playing"); video.controls = false; }
   });
   document.addEventListener("visibilitychange", () => {
@@ -289,13 +299,13 @@
   }
   addEventListener("wheel", (e) => {
     intent();
-    if (state !== "playing") return;
+    if (state !== "playing" || inline()) return;
     if (e.deltaY < -2) leaveUp(); else if (e.deltaY > 2) hint();
   }, { passive: true });
   addEventListener("touchstart", (e) => { intent(); touchY = e.touches[0].clientY; }, { passive: true });
   addEventListener("touchmove", (e) => {
     intent();
-    if (state !== "playing" || touchY == null) return;
+    if (state !== "playing" || touchY == null || inline()) return;
     const dy = e.touches[0].clientY - touchY;
     if (dy > 40) { touchY = null; leaveUp(); } else if (dy < -40) { touchY = null; hint(); }
   }, { passive: true });
@@ -321,6 +331,40 @@
     const jumping = performance.now() < (window.UMBER_NAV_UNTIL || 0);
     if (down && !jumping && y > top + 2 && y < top + H * 0.9 && performance.now() - lastInput < 1500) start();
   }, { passive: true });
+
+  /* ---------- Phones: the film plays while it is in view ---------- */
+  function playInline(fromStart) {
+    load();
+    if (fromStart || video.ended) { try { video.currentTime = 0; } catch (_) {} }
+    endImg.classList.remove("is-on");
+    state = "playing";
+    root.classList.add("is-playing");
+    play();
+    loop();
+    status.textContent = "The story is playing, about 25 seconds.";
+  }
+  function pauseInline() {
+    if (state !== "playing") return;
+    state = "paused";
+    video.pause();
+    root.classList.remove("is-playing");
+  }
+  function endInline() {
+    state = "done";
+    root.classList.remove("is-playing");
+    endImg.classList.add("is-on");
+    showChapter(-1);
+    status.textContent = "Story finished.";
+  }
+  new IntersectionObserver((entries) => {           // near: get the film ready
+    if (inline() && entries[0].isIntersecting) load();
+  }, { rootMargin: "100% 0px 100% 0px" }).observe(root);
+  new IntersectionObserver((entries) => {           // mostly in view: play; mostly out: pause
+    if (!inline()) return;
+    const r = entries[0].intersectionRatio;
+    if (r >= 0.6 && (state === "idle" || state === "paused")) playInline(state === "idle");
+    else if (r < 0.3) pauseInline();
+  }, { threshold: [0, 0.3, 0.6] }).observe(root);
 
   skipBtn.addEventListener("click", () => finish(true));
   playBtn.addEventListener("click", () => (reduced ? playStill() : play()));

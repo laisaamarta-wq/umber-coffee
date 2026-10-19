@@ -152,7 +152,7 @@ html[data-checks="hide"] .check { display: none !important; }
 /* phones: what steps back on a shorter screen so the coffee never slides under the top bar (app.js, fitHero) */
 @media (max-width: 899px) {
   .hero-ui.fit-1 .wheel-lede { display: none; }
-  .hero-ui.fit-1 .wheel-label { margin-bottom: 0.4rem; }
+  .hero-ui.fit-1 .wheel-label { margin-bottom: 1rem; }
   .hero-ui.fit-2 .dial-hint { display: none; }
   .hero-ui.fit-3 .to-go { display: none; }
 }
@@ -556,22 +556,29 @@ html[data-checks="hide"] .check { display: none !important; }
   transition: opacity 0.35s var(--ease-out);
 }
 .coffee.is-swapping .coffee-media video { opacity: 0; }
-/* the cup sits beside the coffee's words (note, name, beans and brew), level with them: its foot
-   on the brew line. It keeps that place for every coffee, one-line name or two, and covers nothing */
+/* the cup sits in its own column beside the coffee's words, level with them: from the name down to
+   beside "Order this coffee", its foot a little above the button's foot. It keeps that place for every
+   coffee, one-line name or two, and covers nothing */
 @media (max-width: 1099px) {
   .coffee {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-rows: minmax(0, 1fr) auto auto auto auto;
     column-gap: 0.9rem;
   }
-  .coffee-media { position: relative; top: auto; right: auto; grid-column: 2; grid-row: 1 / 6; align-self: end; }
-  .coffee > .note-label { grid-column: 1; grid-row: 2; align-self: end; }
-  .coffee > .coffee-name { grid-column: 1; grid-row: 3; }
-  .coffee > .coffee-desc { grid-column: 1; grid-row: 4; }
-  .coffee > .coffee-meta { grid-column: 1; grid-row: 5; flex-direction: column; gap: 0.2rem; }
-  .coffee > .order, .coffee > .to-go { grid-column: 1 / -1; }
-  .coffee > .order { justify-self: start; }
+  .coffee-media {
+    position: relative; top: auto; right: auto; grid-column: 2; grid-row: 1 / 6; align-self: end; margin-bottom: 2rem;
+    width: clamp(84px, min(30vw, 100vw - 17.25rem), 132px);    /* never reaches under the button */
+  }
+  .coffee > .note-label { grid-column: 1; grid-row: 1; }
+  .coffee > .coffee-name { grid-column: 1; grid-row: 2; }
+  .coffee > .coffee-desc { grid-column: 1; grid-row: 3; }
+  .coffee > .coffee-meta { grid-column: 1; grid-row: 4; flex-direction: column; gap: 0.2rem; }
+  .coffee > .order { grid-column: 1 / -1; grid-row: 5; justify-self: start; }
+  .coffee > .to-go { grid-column: 1 / -1; grid-row: 6; }
+}
+/* very narrow phones: the button needs the full width, so the cup ends at the brew line */
+@media (max-width: 359px) {
+  .coffee-media { grid-row: 1 / 5; margin-bottom: 0; }
 }
 
 /* ---------- The wheel label ---------- */
