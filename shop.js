@@ -92,8 +92,7 @@
     const c = w < 600 ? 2 : w < 900 ? 3 : 4;
     const extra = (c - (n % c)) % c;               // empty places in the last row
     if (extra === 0 || n < 2) return { c, wide: 0, large: false };
-    if (extra === 3 && c >= 4) return { c, wide: 0, large: true };   // one card two by two
-    return { c, wide: Math.min(extra, n), large: false };            // one or two cards two wide
+    return { c, wide: Math.min(extra, n), large: false };            // one to three cards two wide (a 2 x 2 card cropped the cup)
   }
   function layoutMenu() {
     const items = grid.children, plan = gridPlan(items.length);
