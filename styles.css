@@ -155,6 +155,8 @@ html[data-checks="hide"] .check { display: none !important; }
   .hero-ui.fit-1 .wheel-label { margin-bottom: 1rem; }
   .hero-ui.fit-2 .dial-hint { display: none; }
   .hero-ui.fit-3 .to-go { display: none; }
+  .hero-ui.fit-4 .coffee { --cup: 84px; }
+  .hero-ui.fit-5 .coffee { --cup: 68px; }
 }
 .hero {
   position: sticky; top: 0;
@@ -557,20 +559,21 @@ html[data-checks="hide"] .check { display: none !important; }
 }
 .coffee.is-swapping .coffee-media video { opacity: 0; }
 /* phones and tablets: the coffee's words run the full width, clear of the barista; below them one quiet
-   panel holds two matching rows, each a square photo with its actions beside it: this cup and
-   "Order this coffee", then the takeaway cups with "Order takeaway" and "Explore our coffee".
-   The two photos share one size and one edge, so the rows line up */
+   panel is the coffee itself: a large photo of this cup, and beside it what it is (beans, how it is brewed)
+   with "Order this coffee" under that, so the cup is the biggest thing in the panel. Under it, a thin line,
+   then the takeaway cups with "Order takeaway" and "Explore our coffee", their actions on the same edge */
 @media (max-width: 1099px) {
   .coffee {
-    --thumb: 76px; --pad: 8px;
+    --cup: clamp(84px, min(32vw, 17svh), 148px); --thumb: 64px; --pad: 8px;   /* as large as the screen allows: shorter phones get a smaller cup so the name stays clear of the top bar */
     display: grid;
-    grid-template-columns: calc(var(--thumb) + var(--pad)) minmax(0, 1fr);
-    column-gap: 0.9rem;
+    grid-template-columns: calc(var(--cup) + var(--pad)) minmax(0, 1fr);
+    column-gap: 1rem;
   }
   .coffee::after {
     content: ""; z-index: -1;
-    grid-column: 1 / -1; grid-row: 5 / 7;
-    border-radius: 18px;
+    grid-column: 1 / -1; grid-row: 4 / 7;
+    margin-top: 1.1rem;
+    border-radius: 20px;
     background: rgba(18, 13, 10, 0.42); border: 1px solid rgba(244, 236, 226, 0.16);
     -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
     pointer-events: none;
@@ -578,39 +581,49 @@ html[data-checks="hide"] .check { display: none !important; }
   .coffee > .note-label { grid-column: 1 / -1; grid-row: 1; }
   .coffee > .coffee-name { grid-column: 1 / -1; grid-row: 2; max-width: 62%; }   /* a long name breaks onto two lines before it reaches the barista */
   .coffee > .coffee-desc { grid-column: 1 / -1; grid-row: 3; }
-  .coffee > .coffee-meta { grid-column: 1 / -1; grid-row: 4; flex-direction: column; gap: 0.2rem; margin-bottom: 1.1rem; }
   .coffee > .coffee-media {
     position: relative; top: auto; right: auto;
-    grid-column: 1; grid-row: 5; align-self: center;
-    width: var(--thumb); margin: var(--pad) 0 var(--pad) var(--pad);
-    border-radius: 11px; box-shadow: none;
+    grid-column: 1; grid-row: 4 / 6; align-self: start;
+    width: var(--cup); margin: calc(1.1rem + var(--pad)) 0 var(--pad) var(--pad);
+    border-radius: 13px; box-shadow: none;
   }
+  .coffee > .coffee-meta {
+    grid-column: 2; grid-row: 4; align-self: start;
+    flex-direction: column; gap: 0.3rem;
+    margin: calc(1.1rem + var(--pad) + 0.35rem) var(--pad) 0 0;
+    font-size: var(--t-s); line-height: 1.3;
+  }
+  .coffee > .coffee-meta div { flex-direction: column; gap: 0.05rem; }
+  .coffee > .coffee-meta dt { font-size: 0.625rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
   .coffee > .order {
-    grid-column: 2; grid-row: 5; align-self: center; justify-self: stretch;
+    grid-column: 2; grid-row: 5; align-self: end; justify-self: stretch;
     justify-content: space-between;
-    margin: var(--pad) var(--pad) var(--pad) 0;
+    min-height: 48px; gap: 0.5rem;
+    margin: 0.6rem var(--pad) var(--pad) 0;
+    padding: 0 0.35rem 0 1.1rem;
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
   }
+  .coffee > .order .order-price { min-height: 36px; padding: 0 0.75rem; }
   .coffee > .to-go {
     grid-column: 1 / -1; grid-row: 6;
     max-width: none; margin: 0 var(--pad); padding: var(--pad) 0;
-    gap: 0.9rem;
+    gap: 1rem;
     background: none; border: 0; border-top: 1px solid rgba(244, 236, 226, 0.12); border-radius: 0;
     -webkit-backdrop-filter: none; backdrop-filter: none;
   }
-  .coffee > .to-go .to-go-img { width: var(--thumb); height: var(--thumb); }
+  .coffee > .to-go .to-go-img { width: var(--thumb); height: var(--thumb); margin-right: calc(var(--cup) - var(--thumb)); }   /* the actions start on the same edge as the order button */
   .coffee > .to-go .to-go-body { flex: 1; min-width: 0; }
   .coffee > .to-go .to-go-actions { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 0; }
-  .coffee > .to-go .to-go-main { justify-content: space-between; padding: 0 1.1rem 0 1.4rem; }
-  .coffee > .to-go .to-go-alt { align-self: flex-start; min-height: 34px; margin-left: 1.4rem; }
+  .coffee > .to-go .to-go-main { justify-content: space-between; padding: 0 1.1rem; }
+  .coffee > .to-go .to-go-alt { align-self: flex-start; min-height: 34px; margin-left: 1.1rem; }
 }
-@media (max-width: 374px) {
-  .coffee { --thumb: 56px; }
-}
-/* very narrow phones: "Order this coffee" needs the whole row, so the cup steps out */
-@media (max-width: 359px) {
-  .coffee > .coffee-media { display: none; }
-  .coffee > .order { grid-column: 1 / -1; margin-left: var(--pad); }
+/* narrower phones: "Order this coffee" needs a whole row to stay on one line, so it moves under the cup
+   and runs the panel's full width; the cup and its details stay side by side above it */
+@media (max-width: 419px) {
+  .coffee > .coffee-media { grid-row: 4; margin-bottom: 0; }
+  .coffee > .coffee-meta { align-self: center; margin-top: calc(1.1rem + var(--pad)); }
+  .coffee > .order { grid-column: 1 / -1; grid-row: 5; margin: 0.6rem var(--pad) var(--pad); }
+  .coffee > .to-go .to-go-img { margin-right: 0; }
 }
 
 /* ---------- The wheel label ---------- */
