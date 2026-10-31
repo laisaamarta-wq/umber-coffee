@@ -566,19 +566,19 @@ html[data-checks="hide"] .check { display: none !important; }
     column-gap: 0.9rem;
   }
   .coffee-media {
-    position: relative; top: auto; right: auto; grid-column: 2; grid-row: 1 / 6; align-self: end; margin-bottom: 2rem;
+    position: relative; top: auto; right: auto; grid-column: 2; grid-row: 5; align-self: start; margin: 1rem 0 0;   /* its top level with the top of "Order this coffee", clear of the barista */
     width: clamp(84px, min(30vw, 100vw - 17.25rem), 132px);    /* never reaches under the button */
   }
   .coffee > .note-label { grid-column: 1; grid-row: 1; }
   .coffee > .coffee-name { grid-column: 1; grid-row: 2; }
   .coffee > .coffee-desc { grid-column: 1; grid-row: 3; }
   .coffee > .coffee-meta { grid-column: 1; grid-row: 4; flex-direction: column; gap: 0.2rem; }
-  .coffee > .order { grid-column: 1 / -1; grid-row: 5; justify-self: start; }
+  .coffee > .order { grid-column: 1 / -1; grid-row: 5; justify-self: start; align-self: start; }
   .coffee > .to-go { grid-column: 1 / -1; grid-row: 6; }
 }
 /* very narrow phones: the button needs the full width, so the cup ends at the brew line */
 @media (max-width: 359px) {
-  .coffee-media { grid-row: 1 / 5; margin-bottom: 0; }
+  .coffee-media { grid-row: 1 / 5; align-self: end; margin: 0; }
 }
 
 /* ---------- The wheel label ---------- */
@@ -705,7 +705,7 @@ html[data-checks="hide"] .check { display: none !important; }
   .hero-media { height: 54svh; }
   .coffee-desc { display: none; }
   .dial { --size: 112px; padding-top: 44px; }
-  .order { margin-top: 0.75rem; }
+  .order, .coffee-media { margin-top: 0.75rem; }
 }
 
 /* ---------- Larger screens: full-bleed photograph, coffee left, wheel right ---------- */
