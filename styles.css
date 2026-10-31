@@ -561,7 +561,7 @@ html[data-checks="hide"] .check { display: none !important; }
 /* phones and tablets: the coffee's words run the full width, clear of the barista; below them one quiet
    panel is the coffee itself: a large photo of this cup, and beside it what it is (beans, how it is brewed)
    with "Order this coffee" under that, so the cup is the biggest thing in the panel. Under it, a thin line,
-   then the takeaway cups with "Order takeaway" and "Explore our coffee", their actions on the same edge */
+   then the takeaway cups with "Order takeaway", on the same edge as the order button */
 @media (max-width: 1099px) {
   .coffee {
     --cup: clamp(84px, min(32vw, 17svh), 148px); --thumb: 64px; --pad: 8px;   /* as large as the screen allows: shorter phones get a smaller cup so the name stays clear of the top bar */
@@ -615,7 +615,6 @@ html[data-checks="hide"] .check { display: none !important; }
   .coffee > .to-go .to-go-body { flex: 1; min-width: 0; }
   .coffee > .to-go .to-go-actions { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 0; }
   .coffee > .to-go .to-go-main { justify-content: space-between; padding: 0 1.1rem; }
-  .coffee > .to-go .to-go-alt { align-self: flex-start; min-height: 34px; margin-left: 1.1rem; }
 }
 /* narrower phones: "Order this coffee" needs a whole row to stay on one line, so it moves under the cup
    and runs the panel's full width; the cup and its details stay side by side above it */
