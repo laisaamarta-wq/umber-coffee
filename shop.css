@@ -355,7 +355,7 @@ html.sf-locked .story-btn { opacity: 0.45; pointer-events: none; }
 @media (max-width: 899px) {
   .wheel-lede { font-size: 0.95rem; max-width: 30ch; margin-bottom: 0.45rem; }
   .dial-hint { font-size: var(--t-xs); max-width: 40ch; }
-  .wheel-more { margin-top: 1rem; min-height: 30px; }   /* clear of the hint above it */
+  .wheel-more { margin-top: 1.75rem; min-height: 30px; }   /* a line of its own, well clear of the hint above it */
   .hero-ui { padding-bottom: calc(env(safe-area-inset-bottom) + 0.35rem); }   /* the same 10 px taken from under it, so nothing above moves */
 }
 
