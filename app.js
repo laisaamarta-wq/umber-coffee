@@ -807,8 +807,8 @@
   }).observe(hero);
   /* ---------- Phones: the coffee and the wheel always fit under the top bar ----------
      Measured with the longest coffee, so nothing comes and goes as you turn the wheel. On shorter
-     screens the quieter lines step back, in turn: the wheel's sentence, then its hint, then the takeaway box (takeaway is also in the menu and further down the page); only then, on the shortest screens, the cup photo gets smaller, in two steps. */
-  const FIT = ["fit-1", "fit-2", "fit-3", "fit-4", "fit-5"];
+     screens the quieter lines step back, in turn: the wheel's sentence, then its hint, then the takeaway box (takeaway is also in the menu and further down the page); only then, on the shortest screens, the cup photo gets smaller, in two steps, and last "Explore our coffee" moves closer to the wheel. */
+  const FIT = ["fit-1", "fit-2", "fit-3", "fit-4", "fit-5", "fit-6"];
   function fitHero() {
     heroUI.classList.remove(...FIT);
     if (!phoneStage.matches) return;

@@ -355,7 +355,18 @@ html.sf-locked .story-btn { opacity: 0.45; pointer-events: none; }
 @media (max-width: 899px) {
   .wheel-lede { font-size: 0.95rem; max-width: 30ch; margin-bottom: 0.45rem; }
   .dial-hint { font-size: var(--t-xs); max-width: 40ch; }
-  .wheel-more { margin-top: 1.75rem; min-height: 30px; }   /* a line of its own, well clear of the hint above it */
+  /* a button of its own, well below the hint: caramel outline and words, like "Order takeaway" */
+  .wheel-more {
+    margin-top: 2.25rem; min-height: 42px; padding: 0 1.5rem; gap: 0.55rem;
+    border: 1px solid rgba(201, 146, 84, 0.55); border-radius: 999px;
+    background: linear-gradient(90deg, rgba(201, 146, 84, 0.14), rgba(201, 146, 84, 0.06));
+    color: #d6a066; font-size: var(--t-s); font-weight: 600; letter-spacing: 0.04em;
+    transition: border-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
+  }
+  .wheel-more:hover { color: #e9b77c; border-color: rgba(201, 146, 84, 0.9); }
+  .wheel-more span { transition: transform 0.3s var(--ease-out); }
+  .wheel-more:hover span { transform: translateY(2px); }
+  .hero-ui.fit-6 .wheel-more { margin-top: 1rem; min-height: 38px; }   /* the shortest screens (app.js, fitHero) */
   .hero-ui { padding-bottom: calc(env(safe-area-inset-bottom) + 0.35rem); }   /* the same 10 px taken from under it, so nothing above moves */
 }
 
