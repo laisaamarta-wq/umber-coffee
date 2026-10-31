@@ -832,6 +832,14 @@
   layout();
   renderDial();
   addEventListener("resize", layout);
+  // phones: the café is as tall as the visible screen, so it changes when the browser's bars fold away or come back
+  let heroH = hero.clientHeight, heroFrame = 0;
+  new ResizeObserver(() => {
+    if (hero.clientHeight === heroH) return;
+    heroH = hero.clientHeight;
+    cancelAnimationFrame(heroFrame);
+    heroFrame = requestAnimationFrame(layout);
+  }).observe(hero);
   addEventListener("load", layout);
   document.fonts?.ready.then(() => { fitHero(); layoutDial(); });
   requestAnimationFrame(tick);

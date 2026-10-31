@@ -167,6 +167,10 @@ html[data-checks="hide"] .check { display: none !important; }
   overflow: hidden;
   isolation: isolate;
 }
+/* phones and tablets: the café fills the screen you actually see. When the browser's bars fold away the
+   picture grows with it, so the space they leave is air for the composition, not an empty strip below it
+   (app.js lays the stage out again when the height changes) */
+@media (max-width: 899px) { .hero { height: 100dvh; } }
 
 /* the street */
 .street {
@@ -652,6 +656,8 @@ html[data-checks="hide"] .check { display: none !important; }
 
 /* phones and tablets: the wheel's title sits between two fine lines, as a chapter heading */
 @media (max-width: 899px) {
+  .wheel-label { margin-top: 1.5rem; }   /* air between the coffee panel and the wheel */
+  .hero-ui.fit-6 .wheel-label { margin-top: 0.5rem; }
   .wheel-label { align-self: stretch; display: flex; align-items: center; justify-content: center; gap: 1rem; }
   .wheel-label::before, .wheel-label::after { content: ""; flex: 1; max-width: 6rem; height: 1px; background: linear-gradient(to right, rgba(201, 146, 84, 0), rgba(201, 146, 84, 0.45)); }
   .wheel-label::after { transform: scaleX(-1); }
