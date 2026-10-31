@@ -84,12 +84,12 @@
       </div>
     </li>`;
   }
-  // even rows: four across on a computer, three on a tablet, two on a phone. If the count leaves
+  // even rows: four across on a computer, three on a tablet; a phone lists them one per row. If the count leaves
   // a gap, the first drinks take more room (one or two cards two wide, or one two by two),
   // so every row is full and the columns never change with the filter
   function gridPlan(n) {
     const w = innerWidth;
-    const c = w < 600 ? 2 : w < 900 ? 3 : 4;
+    const c = w < 600 ? 1 : w < 900 ? 3 : 4;              // phones: one drink per row, photo beside the words
     const extra = (c - (n % c)) % c;               // empty places in the last row
     if (extra === 0 || n < 2) return { c, wide: 0, large: false };
     return { c, wide: Math.min(extra, n), large: false };            // one to three cards two wide (a 2 x 2 card cropped the cup)
@@ -105,17 +105,37 @@
   let menuW = innerWidth;
   addEventListener("resize", () => { if (innerWidth !== menuW) { menuW = innerWidth; layoutMenu(); } });
 
+  // phones: the first eight drinks, then one button opens the rest, so the menu stays a menu and not a long scroll
+  const PHONE_FIRST = 8;
+  const moreBtn = document.createElement("button");
+  moreBtn.type = "button"; moreBtn.className = "menu-more";
+  grid.after(moreBtn);
+  let menuOpen = false;
+  function setMore(n) {
+    grid.classList.toggle("is-open", menuOpen);
+    moreBtn.hidden = n <= PHONE_FIRST;
+    moreBtn.setAttribute("aria-expanded", String(menuOpen));
+    moreBtn.innerHTML = menuOpen ? `Show fewer drinks <span aria-hidden="true">↑</span>` : `Show all ${n} drinks <span aria-hidden="true">↓</span>`;
+  }
+  moreBtn.addEventListener("click", () => {
+    menuOpen = !menuOpen;
+    setMore(grid.children.length);
+    if (!menuOpen) goTo("menu");
+    else grid.children[PHONE_FIRST]?.querySelector("button")?.focus({ preventScroll: true });
+  });
+
   function renderMenu() {
     const list = S.drinks.filter((d) => matches(d, filter));
     grid.innerHTML = list.map(card).join("");
     layoutMenu();
+    setMore(list.length);
     filterBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === filter)));
     const label = S.filters.find((f) => f.id === filter).label;
     countEl.textContent = `${label}: ${list.length} drinks.`;
   }
   function setFilter(f) {
     if (!S.filters.some((x) => x.id === f) || f === filter) return;
-    filter = f;
+    filter = f; menuOpen = false;
     if (reduced) { renderMenu(); return; }
     grid.classList.add("is-changing");
     setTimeout(() => { renderMenu(); grid.classList.remove("is-changing"); }, 180);

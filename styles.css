@@ -119,6 +119,9 @@ html[data-checks="hide"] .check { display: none !important; }
 .bar-btn:hover { border-color: rgba(244, 236, 226, 0.55); }
 .sound-label { display: none; }
 .brand-city { display: none; }
+/* phones: "Specialty coffee" stays on one line under the name */
+.brand-sub { white-space: nowrap; }
+@media (max-width: 419px) { .brand-sub { letter-spacing: 0.13em; font-size: 0.625rem; } }
 
 /* a small level meter: still and dim when off, moving when on */
 .sound-bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
@@ -560,8 +563,8 @@ html[data-checks="hide"] .check { display: none !important; }
 .coffee.is-swapping .coffee-media video { opacity: 0; }
 /* phones and tablets: the coffee's words run the full width, clear of the barista; below them one quiet
    panel is the coffee itself: a large photo of this cup, and beside it what it is (beans, how it is brewed)
-   with "Order this coffee" under that, so the cup is the biggest thing in the panel. Under it, a thin line,
-   then the takeaway cups with "Order takeaway", on the same edge as the order button */
+   with "Order this coffee" under that, so the cup is the biggest thing in the panel; "Order takeaway"
+   is one wide card along its foot */
 @media (max-width: 1099px) {
   .coffee {
     --cup: clamp(84px, min(32vw, 17svh), 148px); --thumb: 64px; --pad: 8px;   /* as large as the screen allows: shorter phones get a smaller cup so the name stays clear of the top bar */
@@ -604,17 +607,30 @@ html[data-checks="hide"] .check { display: none !important; }
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
   }
   .coffee > .order .order-price { min-height: 36px; padding: 0 0.75rem; }
+  /* takeaway: one wide card along the panel's foot, the photo filling its left end, the whole card a link */
   .coffee > .to-go {
-    grid-column: 1 / -1; grid-row: 6;
-    max-width: none; margin: 0 var(--pad); padding: var(--pad) 0;
-    gap: 1rem;
-    background: none; border: 0; border-top: 1px solid rgba(244, 236, 226, 0.12); border-radius: 0;
+    position: relative; grid-column: 1 / -1; grid-row: 6;
+    max-width: none; min-height: 58px; margin: 0.75rem var(--pad) var(--pad); padding: 0; gap: 0;
+    align-items: stretch; overflow: hidden;
+    border: 1px solid rgba(201, 146, 84, 0.42); border-radius: 14px;
+    background: linear-gradient(90deg, rgba(201, 146, 84, 0.13), rgba(201, 146, 84, 0.05));
     -webkit-backdrop-filter: none; backdrop-filter: none;
+    transition: border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out);
   }
-  .coffee > .to-go .to-go-img { width: var(--thumb); height: var(--thumb); margin-right: calc(var(--cup) - var(--thumb)); }   /* the actions start on the same edge as the order button */
-  .coffee > .to-go .to-go-body { flex: 1; min-width: 0; }
-  .coffee > .to-go .to-go-actions { flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 0; }
-  .coffee > .to-go .to-go-main { justify-content: space-between; padding: 0 1.1rem; }
+  .coffee > .to-go:hover { border-color: rgba(201, 146, 84, 0.75); }
+  .coffee > .to-go .to-go-img { width: calc(var(--cup) * 0.62); height: 56px; border-radius: 0; }   /* a low strip, the cups cropped from the middle */
+  .coffee > .to-go .to-go-img.is-missing { display: none; }
+  .coffee > .to-go .to-go-body { flex: 1; min-width: 0; display: flex; }
+  .coffee > .to-go .to-go-line { display: none; }
+  .coffee > .to-go .to-go-actions { flex: 1; }
+  .coffee > .to-go .to-go-main {
+    flex: 1; justify-content: space-between; min-height: 56px; padding: 0 1.1rem 0 1.15rem;
+    background: none; border-radius: 0; color: #d6a066; font-size: var(--t-m); font-weight: 500; letter-spacing: 0.005em;
+  }
+  .coffee > .to-go .to-go-main:hover { background: none; transform: none; }
+  .coffee > .to-go .to-go-main::after { content: ""; position: absolute; inset: 0; }   /* the photo opens it too */
+  .coffee > .to-go .to-go-main span { font-size: 1.15em; transition: transform 0.3s var(--ease-out); }
+  .coffee > .to-go:hover .to-go-main span { transform: translateX(3px); }
 }
 /* narrower phones: "Order this coffee" needs a whole row to stay on one line, so it moves under the cup
    and runs the panel's full width; the cup and its details stay side by side above it */
@@ -622,7 +638,6 @@ html[data-checks="hide"] .check { display: none !important; }
   .coffee > .coffee-media { grid-row: 4; margin-bottom: 0; }
   .coffee > .coffee-meta { align-self: center; margin-top: calc(1.1rem + var(--pad)); }
   .coffee > .order { grid-column: 1 / -1; grid-row: 5; margin: 0.6rem var(--pad) var(--pad); }
-  .coffee > .to-go .to-go-img { margin-right: 0; }
 }
 
 /* ---------- The wheel label ---------- */
@@ -633,6 +648,13 @@ html[data-checks="hide"] .check { display: none !important; }
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink-soft);
+}
+
+/* phones and tablets: the wheel's title sits between two fine lines, as a chapter heading */
+@media (max-width: 899px) {
+  .wheel-label { align-self: stretch; display: flex; align-items: center; justify-content: center; gap: 1rem; }
+  .wheel-label::before, .wheel-label::after { content: ""; flex: 1; max-width: 6rem; height: 1px; background: linear-gradient(to right, rgba(201, 146, 84, 0), rgba(201, 146, 84, 0.45)); }
+  .wheel-label::after { transform: scaleX(-1); }
 }
 
 /* ---------- Coffee card (desktop): a coffee served beside the wheel ---------- */

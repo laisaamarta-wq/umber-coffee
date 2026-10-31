@@ -584,3 +584,90 @@ html.sf-locked .added { display: none; }
 .pour-canvas { opacity: 0; transition: opacity 0.6s var(--ease-out); }
 .pour-stage.is-live .pour-canvas, .pour-stage.is-calm .pour-canvas { opacity: 1; }
 @media (max-width: 899px) { .pour-stage { width: min(88%, 22rem); aspect-ratio: 1160 / 1440; } }
+
+/* ==========================================================================
+   Phones (up to 599 px): one system for the whole page below the first screen.
+   Every section: the same gutter, the same head (kicker, serif title, lede), the same space
+   above the content; cards are 18 px round, photos 14 px, buttons full pills of 48 px or more.
+   Long product lists stay short: the menu shows its first eight drinks (shop.js),
+   the signature cups and the coffee bags move sideways, a swipe each, the next one peeking in.
+   ========================================================================== */
+@media (max-width: 599px) {
+  /* section rhythm */
+  .shop { padding: 4.5rem var(--gutter) 5rem; }
+  .shop-kicker { font-size: 0.6875rem; letter-spacing: 0.22em; }
+  .shop-title { margin-top: 0.75rem; font-size: 2.3rem; line-height: 1.04; }
+  .shop-lede { margin-top: 0.75rem; font-size: 1rem; line-height: 1.5; max-width: 34ch; }
+  .shop-note { margin-top: 1.5rem; line-height: 1.5; }
+  .shop-btn { width: 100%; justify-content: center; min-height: 52px; }
+
+  /* menu: the filters scroll sideways; each drink is one row, the photo beside its words */
+  .menu-filters { margin-top: 1.75rem; }
+  .menu-filter { min-height: 40px; padding: 0 1rem; }
+  .menu-grid { margin-top: 1.25rem; grid-template-columns: minmax(0, 1fr); gap: 0.625rem; }
+  .menu-grid:not(.is-open) > .card:nth-child(n + 9) { display: none; }
+  .card {
+    display: grid; grid-template-columns: 7rem minmax(0, 1fr); align-items: stretch;
+    padding: 0.5rem; border-radius: 18px;
+  }
+  .card:hover { transform: none; }
+  .card-open { height: 100%; border-radius: 14px; overflow: hidden; }
+  .card .card-photo { aspect-ratio: auto; height: 100%; min-height: 7.5rem; border-radius: 14px; }
+  .card-body { padding: 0.3rem 0.35rem 0.1rem 0.9rem; }
+  .card-tags { gap: 0; }
+  .card-tags span { padding: 0; background: none; font-size: 0.625rem; letter-spacing: 0.12em; color: var(--forest); }
+  .card-tags span + span::before { content: "·"; margin: 0 0.4em; color: var(--cocoa-faint); }
+  .card-name { margin-top: 0.35rem; font-size: 1.2rem; line-height: 1.12; }
+  .card-line { margin-top: 0.25rem; -webkit-line-clamp: 2; font-size: 0.8125rem; line-height: 1.4; }
+  .card-foot { padding-top: 0.55rem; }
+  .card-price { font-size: 0.9375rem; }
+  .card-add { width: 40px; height: 40px; }
+  .menu-more {
+    margin-top: 1rem; width: 100%; min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    border-radius: 999px; border: 1px solid rgba(42, 29, 22, 0.28); background: transparent; color: var(--cocoa);
+    font: 600 var(--t-s)/1 var(--f-text); cursor: pointer;
+    transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
+  }
+  .menu-more:hover { background: var(--cocoa); color: var(--paper); }
+  .menu-more[hidden] { display: none; }
+
+  /* signature cups and coffee bags: a row you swipe, the next card peeking in */
+  .sig-list, .bag-grid {
+    position: relative;   /* hidden labels inside the cards stay inside the row, so the page never gets wider than the phone */
+    margin: 1.75rem calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) 0.25rem;
+    display: flex; gap: 0.75rem; overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: none;
+  }
+  .sig-list::-webkit-scrollbar, .bag-grid::-webkit-scrollbar { display: none; }
+  .sig-item, .bag-card { flex: 0 0 78%; scroll-snap-align: start; }
+  .sig-photo { aspect-ratio: 4 / 5; border-radius: 18px; }
+  .sig-copy { padding: 1rem 0.15rem 0; }
+  .sig-name { font-size: 1.45rem; }
+  .sig-words { font-size: 0.875rem; }
+  .sig-foot { margin-top: 0.6rem; flex-direction: row; align-items: center; gap: 1rem; }
+
+  .bag-card { border-radius: 18px; }
+  .bag-photo { aspect-ratio: 1 / 1; }
+  .bag-body { padding: 1rem 1rem 1.1rem; }
+  .bag-name { font-size: 1.35rem; }
+  .bag-notes { font-size: 0.875rem; }
+  .bag-card .card-foot { flex-direction: row; align-items: center; gap: 0.75rem; }
+  .bag-add { width: auto; min-height: 44px; }
+
+  /* takeaway: the cups photo, the head, the three cups, then one full-width button */
+  .togo-in { gap: 1.75rem; }
+  .togo-media { aspect-ratio: 4 / 3; border-radius: 18px; }
+  .togo-cups { margin-top: 1.5rem; gap: 0; }
+  .togo-cup { padding: 0.9rem 0; border-top: 1px solid rgba(244, 236, 226, 0.1); }
+  .togo-cup:last-child { border-bottom: 1px solid rgba(244, 236, 226, 0.1); }
+
+  /* pour your own cup: the same head as every section */
+  .pour-pads { gap: 0.85rem; }
+
+  /* footer: the brand, two short columns, then the page links in two columns */
+  .foot { padding-top: 4rem; }
+  .foot-in > nav.foot-col { grid-column: 1 / -1; }
+  .foot-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.5rem; }
+  .foot-base { margin-top: 2.25rem; }
+}
+@media (min-width: 600px) { .menu-more { display: none; } }
